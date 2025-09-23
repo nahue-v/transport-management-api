@@ -33,6 +33,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   RefreshToken RefreshToken[]
+  orders Order[]
 }
 
 enum Role {
@@ -50,4 +51,42 @@ model RefreshToken {
 
   createdAt DateTime @default(now())
   expiresAt DateTime
+}
+
+model Product {
+  id       Int          @id @default(autoincrement())
+  name     String
+  price    Float
+  stock    Int
+  orderItems OrderItem[]
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  clientId Int
+  client   User        @relation(fields: [clientId], references: [id])
+  date     DateTime    @default(now())
+  state    State      @default(PENDING)
+  //camionId  Int?
+  //truck    Camion?     @relation(fields: [camionId], references: [id])
+  orderItems OrderItem[]
+  total Float
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float     // precio en el momento del pedido (congelado)
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+enum State {
+  PENDING
+  PREPARATION
+  LOADED
+  DELIVERED
 }

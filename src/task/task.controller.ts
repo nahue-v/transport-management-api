@@ -6,9 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import type { Task } from '@prisma/client';
+import { Role, type Task } from '@prisma/client';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('tasks')
 export class TaskController {

@@ -84,6 +84,35 @@ model OrderItem {
   product Product @relation(fields: [productId], references: [id])
 }
 
+model Truck{
+  id Int @id @default(autoincrement())
+  plate String @unique
+  capacity Int
+  status TruckStatus @default(AVAILABLE)
+
+  driver Driver?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Driver {
+  id        Int     @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  truckId   Int?     @unique
+  truck     Truck?   @relation(fields: [truckId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+enum TruckStatus {
+  AVAILABLE
+  IN_MAINTENANCE
+}
+
 enum State {
   PENDING
   PREPARATION
